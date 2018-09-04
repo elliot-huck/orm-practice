@@ -124,5 +124,52 @@ namespace nss.Data
 				}
 			}
 		}
+
+		public static void CheckExerciseTable()
+		{
+
+			SqliteConnection db = DatabaseInterface.Connection;
+
+			try
+			{
+				List<Exercise> exercises = db.Query<Exercise>
+						("SELECT Id FROM Exercise").ToList();
+			}
+			catch (System.Exception ex)
+			{
+				if (ex.Message.Contains("no such table"))
+				{
+					db.Execute($@"
+					CREATE TABLE Exercise (
+						`Id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+						`Name`	varchar(80) NOT NULL,
+						`Language`	varchar(80) NOT NULL
+						)
+					");
+
+					db.Execute($@"
+					INSERT INTO Exercise
+					VALUES (null, 'Overly Excited', 'JavaScript')
+					");
+
+					db.Execute($@"
+					INSERT INTO Exercise
+					VALUES (null, 'ChickenMonkey', 'JavaScript')
+					");
+
+					db.Execute($@"
+					INSERT INTO Exercise
+					VALUES (null, 'Boy Bands & Vegetables', 'JavaScript')
+					");
+				}
+			}
+		}
+
+
+
+
+
+
+
 	}
 }
