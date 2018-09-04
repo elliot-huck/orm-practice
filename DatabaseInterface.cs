@@ -171,7 +171,7 @@ namespace nss.Data
 
 			try
 			{
-				List<Student> students = db.Query<Student>($@"
+				List<Student> students = db.Query<Student>(@"
 				SELECT Id FROM Student
 				").ToList();
 			}
@@ -186,35 +186,35 @@ namespace nss.Data
 						`LastName` TEXT NOT NULL,
 						`SlackHandle` TEXT NOT NULL,
 						`CohortId` INT NOT NULL,
-						FOREIGN KEY(`CohortId`) REFERENCES `Corhort`(`Id`)
+						FOREIGN KEY(`CohortId`) REFERENCES `Cohort`(`Id`)
 					)");
 
 					db.Execute($@"
-					INSERT INTO Student (
+					INSERT INTO Student
 						SELECT null,
-						'Ryan',
-						'Tanay',
-						'@ryan.tanay',
-						c.id FROM Cohort c WHERE c.Name = 'Day Cohort 11'
-					)");
+							'Ryan',
+							'Tanay',
+							'@ryan.tanay',
+							c.id FROM Cohort c WHERE c.Name = 'Day Cohort 11'
+					");
 
 					db.Execute($@"
-					INSERT INTO Student (
+					INSERT INTO Student
 						SELECT null,
-						'Juan',
-						'Rodriguez',
-						'@juanrod',
-						c.id FROM Cohort c WHERE c.Name = 'Day Cohort 12'
-					)");
+							'Juan',
+							'Rodriguez',
+							'@juanrod',
+							c.id FROM Cohort c WHERE c.Name = 'Day Cohort 12'
+					");
 
 					db.Execute($@"
-					INSERT INTO Student (
+					INSERT INTO Student
 						SELECT null,
-						'Kate',
-						'Rebekah',
-						'@katerebekah',
-						c.id FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
-					)");
+							'Kate',
+							'Rebekah',
+							'@katerebekah',
+							c.id FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
+					");
 				}
 			}
 		}
@@ -245,43 +245,43 @@ namespace nss.Data
 
 					db.Execute($@"
 					INSERT INTO StudentExercise
-						SELECT (null,
+						SELECT null,
 							e.Id, s.Id, i.Id
                 FROM Student s, Exercise e, Instructor i
                 WHERE e.Name = 'Overly Excited'
                 AND s.SlackHandle = '@ryan.tanay'
                 AND i.SlackHandle = '@coach'
-            )");
+            ");
 
 					db.Execute($@"
 					INSERT INTO StudentExercise
-						SELECT (null,
+						SELECT null,
 							e.Id, s.Id, i.Id
               	FROM Student s, Exercise e, Instructor i
             		WHERE e.Name = 'Overly Excited'
               	AND s.SlackHandle = '@katerebekah'
               	AND i.SlackHandle = '@coach'
-            )");
+            ");
 
 					db.Execute($@"
 					INSERT INTO StudentExercise
-            SELECT (null,
+            SELECT null,
 							e.Id, s.Id, i.Id
                 FROM Student s, Exercise e, Instructor i
                 WHERE e.Name = 'ChickenMonkey'
                 AND s.SlackHandle = '@juanrod'
                 AND i.SlackHandle = '@joes'
-            )");
+            ");
 
 					db.Execute($@"
 					INSERT INTO StudentExercise
-            SELECT (null,
+            SELECT null,
 							e.Id, s.Id, i.Id
                 FROM Student s, Exercise e, Instructor i
                 WHERE e.Name = 'Boy Bands & Vegetables'
                 AND s.SlackHandle = '@katerebekah'
                 AND i.SlackHandle = '@jisie'
-            )");
+            ");
 				}
 			}
 		}
