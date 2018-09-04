@@ -165,6 +165,60 @@ namespace nss.Data
 			}
 		}
 
+		public static void CheckStudentTable()
+		{
+			SqliteConnection db = DatabaseInterface.Connection;
+
+			try
+			{
+				List<Student> students = db.Query<Student>($@"
+				SELECT Id FROM Student
+				").ToList();
+			}
+			catch (System.Exception ex)
+			{
+				if (ex.Message.Contains("no such table"))
+				{
+					db.Execute($@"
+					CREATE TABLE Student (
+						`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						`FirstName` TEXT NOT NULL,
+						`LastName` TEXT NOT NULL,
+						`SlackHandle` TEXT NOT NULL,
+						`CohortId` INT NOT NULL,
+						FOREIGN KEY(`CohortId`) REFERENCES `Corhort`(`Id`)
+					)");
+
+					db.Execute($@"
+					INSERT INTO Student (
+						SELECT null,
+						'Ryan',
+						'Tanay',
+						'@ryan.tanay',
+						c.id FROM Cohort c WHERE c.Name = 'Day Cohort 11'
+					)");
+
+					db.Execute($@"
+					INSERT INTO Student (
+						SELECT null,
+						'Juan',
+						'Rodriguez',
+						'@juanrod',
+						c.id FROM Cohort c WHERE c.Name = 'Day Cohort 12'
+					)");
+
+					db.Execute($@"
+					INSERT INTO Student (
+						SELECT null,
+						'Kate',
+						'Rebekah',
+						'@katerebekah',
+						c.id FROM Cohort c WHERE c.Name = 'Evening Cohort 1'
+					)");
+				}
+			}
+		}
+
 
 
 
