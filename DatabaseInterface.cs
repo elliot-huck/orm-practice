@@ -219,6 +219,73 @@ namespace nss.Data
 			}
 		}
 
+		public static void CheckStudentExerciseTable()
+		{
+			SqliteConnection db = DatabaseInterface.Connection;
+			try
+			{
+				List<StudentExercise> studentExercises = db.Query<StudentExercise>($@"
+					SELECT Id FROM StudentExercise
+				").ToList();
+			}
+			catch (System.Exception ex)
+			{
+				if (ex.Message.Contains("no such table"))
+				{
+					db.Execute($@"
+					CREATE TABLE StudentExercise (
+						`Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						`ExerciseId` INTEGER NOT NULL,
+            `StudentId` INTEGER NOT NULL,
+            `InstructorId` INTEGER NOT NULL,
+            FOREIGN KEY(`ExerciseId`) REFERENCES `Exercise`(`Id`),
+            FOREIGN KEY(`StudentId`) REFERENCES `Student`(`Id`),
+            FOREIGN KEY(`InstructorId`) REFERENCES `Instructor`(`Id`)
+					)");
+
+					db.Execute($@"
+					INSERT INTO StudentExercise
+						SELECT (null,
+							e.Id, s.Id, i.Id
+                FROM Student s, Exercise e, Instructor i
+                WHERE e.Name = 'Overly Excited'
+                AND s.SlackHandle = '@ryan.tanay'
+                AND i.SlackHandle = '@coach'
+            )");
+
+					db.Execute($@"
+					INSERT INTO StudentExercise
+						SELECT (null,
+							e.Id, s.Id, i.Id
+              	FROM Student s, Exercise e, Instructor i
+            		WHERE e.Name = 'Overly Excited'
+              	AND s.SlackHandle = '@katerebekah'
+              	AND i.SlackHandle = '@coach'
+            )");
+
+					db.Execute($@"
+					INSERT INTO StudentExercise
+            SELECT (null,
+							e.Id, s.Id, i.Id
+                FROM Student s, Exercise e, Instructor i
+                WHERE e.Name = 'ChickenMonkey'
+                AND s.SlackHandle = '@juanrod'
+                AND i.SlackHandle = '@joes'
+            )");
+
+					db.Execute($@"
+					INSERT INTO StudentExercise
+            SELECT (null,
+							e.Id, s.Id, i.Id
+                FROM Student s, Exercise e, Instructor i
+                WHERE e.Name = 'Boy Bands & Vegetables'
+                AND s.SlackHandle = '@katerebekah'
+                AND i.SlackHandle = '@jisie'
+            )");
+				}
+			}
+		}
+
 
 
 

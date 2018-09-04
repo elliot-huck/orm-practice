@@ -14,10 +14,10 @@ namespace nss.Data
         public static void Create(SqliteConnection db)
         {
             db.Execute($@"CREATE TABLE StudentExercise (
-                `Id`	        INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                `ExerciseId`	INTEGER NOT NULL,
-                `StudentId` 	INTEGER NOT NULL,
-                `InstructorId` 	INTEGER NOT NULL,
+                `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                `ExerciseId` INTEGER NOT NULL,
+                `StudentId` INTEGER NOT NULL,
+                `InstructorId` INTEGER NOT NULL,
                 FOREIGN KEY(`ExerciseId`) REFERENCES `Exercise`(`Id`),
                 FOREIGN KEY(`StudentId`) REFERENCES `Student`(`Id`),
                 FOREIGN KEY(`InstructorId`) REFERENCES `Instrutor`(`Id`)

@@ -24,6 +24,7 @@ namespace nss
 			DatabaseInterface.CheckInstructorsTable();
 			DatabaseInterface.CheckExerciseTable();
 			DatabaseInterface.CheckStudentTable();
+			DatabaseInterface.CheckStudentExerciseTable();
 
 
 			List<Instructor> instructors = db.Query<Instructor>(@"SELECT * FROM Instructor").ToList();
