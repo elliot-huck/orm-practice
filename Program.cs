@@ -234,17 +234,39 @@ namespace nss
 				{
 					allCohorts[cohort.Id] = cohort;
 				}
-				allCohorts[cohort.Id].Instructors.Add(instructor);
-				allCohorts[cohort.Id].Students.Add(student);
+				if (!allCohorts[cohort.Id].Instructors.Contains(instructor))
+				{
+					allCohorts[cohort.Id].Instructors.Add(instructor);
+				}
+				if (!allCohorts[cohort.Id].Students.Contains(student))
+				{
+					allCohorts[cohort.Id].Students.Add(student);
+				}
 				return cohort;
 			});
 
 			foreach (KeyValuePair<int, Cohort> group in allCohorts)
 			{
-				List<String> teachers = new List<string>();
+				StringBuilder classOutput = new StringBuilder();
 
+				classOutput.Append("Teachers: ");
+				List<string> teacherNames = new List<string>();
+				group.Value.Instructors.ForEach(t =>
+				{
+					teacherNames.Add($"{t.FirstName} {t.LastName}");
+				});
+				classOutput.AppendLine(String.Join(", ", teacherNames));
 
-
+				classOutput.Append("Students: ");
+				List<string> studentNames = new List<string>();
+				group.Value.Students.ForEach(p =>
+				{
+					studentNames.Add($"{p.FirstName} {p.LastName}");
+				});
+				classOutput.AppendLine(String.Join(", ", studentNames));
+				Console.WriteLine(classOutput);
+				Console.WriteLine();
+				
 			}
 
 
