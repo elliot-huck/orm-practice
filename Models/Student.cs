@@ -9,7 +9,7 @@ namespace nss.Data
         public string LastName { get; set; }
         public string SlackHandle { get; set; }
         public Cohort Cohort { get; set; }
-        public List<Exercise> AssignedExercises { get; set; } = new List<Exercise>();
+        public HashSet<Exercise> AssignedExercises { get; set; } = new HashSet<Exercise>();
     }
 
 }

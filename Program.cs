@@ -219,15 +219,33 @@ namespace nss
 				5. List the students working on each exercise, include the student's cohort and the instructor who assigned the exercise
 			*/
 
+			Dictionary<int, Cohort> allCohorts = new Dictionary<int, Cohort>();
 			db.Query<Cohort, Instructor, Student, Cohort>(@"
 			SELECT
 				c.Id, c.Name,
 				i.Id, i.FirstName, i.LastName,
 				s.Id, s.FirstName, s.LastName
 			FROM Cohort c
-			JOIN Instructor i ON c.Id = i.CohortId
-			JOIN Student s ON c.Id = s.CohortId;
-			");
+			LEFT JOIN Instructor i ON c.Id = i.CohortId
+			LEFT JOIN Student s ON c.Id = s.CohortId;
+			", (cohort, instructor, student) =>
+			{
+				if (!allCohorts.ContainsKey(cohort.Id))
+				{
+					allCohorts[cohort.Id] = cohort;
+				}
+				allCohorts[cohort.Id].Instructors.Add(instructor);
+				allCohorts[cohort.Id].Students.Add(student);
+				return cohort;
+			});
+
+			foreach (KeyValuePair<int, Cohort> group in allCohorts)
+			{
+				List<String> teachers = new List<string>();
+				
+
+
+			}
 
 
 
