@@ -255,7 +255,11 @@ namespace nss
 				List<string> teacherNames = new List<string>();
 				group.Value.Instructors.ForEach(t =>
 				{
-					teacherNames.Add($"{t.FirstName} {t.LastName}");
+					string teacherFullName = $"{t.FirstName} {t.LastName}";
+					if (!teacherNames.Contains(teacherFullName))
+					{
+					teacherNames.Add(teacherFullName);
+					}
 				});
 				classOutput.AppendLine(String.Join(", ", teacherNames));
 
@@ -263,7 +267,11 @@ namespace nss
 				List<string> studentNames = new List<string>();
 				group.Value.Students.ForEach(p =>
 				{
-					studentNames.Add($"{p.FirstName} {p.LastName}");
+					string studentFullName = $"{p.FirstName} {p.LastName}";
+					if (!studentNames.Contains(studentFullName))
+					{
+						studentNames.Add(studentFullName);
+					}
 				});
 				classOutput.AppendLine(String.Join(", ", studentNames));
 				Console.WriteLine(classOutput);
