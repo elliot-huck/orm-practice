@@ -226,19 +226,20 @@ namespace nss
 				i.Id, i.FirstName, i.LastName,
 				s.Id, s.FirstName, s.LastName
 			FROM Cohort c
-			JOIN Instructor i ON c.Id = i.CohortId
-			JOIN Student s ON c.Id = s.CohortId;
+			LEFT JOIN Instructor i ON c.Id = i.CohortId
+			LEFT JOIN Student s ON c.Id = s.CohortId
+			ORDER BY c.Name ASC;
 			", (cohort, instructor, student) =>
 			{
 				if (!allCohorts.ContainsKey(cohort.Id))
 				{
 					allCohorts[cohort.Id] = cohort;
 				}
-				if (!allCohorts[cohort.Id].Instructors.Contains(instructor))
+				if (instructor != null)
 				{
 					allCohorts[cohort.Id].Instructors.Add(instructor);
 				}
-				if (!allCohorts[cohort.Id].Students.Contains(student))
+				if (student != null)
 				{
 					allCohorts[cohort.Id].Students.Add(student);
 				}
