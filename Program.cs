@@ -313,20 +313,25 @@ namespace nss
 				foreach (Exercise assignment in activeStudent.Value.AssignedExercises)
 				{
 					string exerciseName = assignment.Name;
+					string instructorName;
 
 					Instructor assigningTeacher =
 					db.Query<StudentExercise, Instructor, Instructor>($@"
 							SELECT
+								se.Id,
 								i.Id, i.FirstName, i.LastName
 							FROM StudentExercise se
 							JOIN Instructor i ON se.InstructorId = i.Id
 							WHERE StudentId = {activeStudent.Value.Id} AND ExerciseId = {assignment.Id};
 							", (studentExercise, instructor) =>
 					{
+						instructorName = (instructor.FirstName);
 						return instructor;
 					}).ToList()[0];
 
-					string instructorName = $"{assigningTeacher.FirstName} {assigningTeacher.LastName}";
+					Console.WriteLine(assigningTeacher);
+
+					// string instructorName = $"{assigningTeacher.FirstName} {assigningTeacher.LastName}";
 
 					studentOutput.AppendLine($"{exerciseName} (assigned by {instructorName})");
 				}
