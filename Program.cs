@@ -216,7 +216,6 @@ namespace nss
 
 			/*
 				4. List the instructors and students assigned to each cohort
-				5. List the students working on each exercise, include the student's cohort and the instructor who assigned the exercise
 			*/
 
 			Dictionary<int, Cohort> allCohorts = new Dictionary<int, Cohort>();
@@ -259,7 +258,7 @@ namespace nss
 					string teacherFullName = $"{t.FirstName} {t.LastName}";
 					if (!teacherNames.Contains(teacherFullName))
 					{
-					teacherNames.Add(teacherFullName);
+						teacherNames.Add(teacherFullName);
 					}
 				});
 				classOutput.AppendLine(String.Join(", ", teacherNames));
@@ -278,6 +277,48 @@ namespace nss
 				Console.WriteLine(classOutput);
 
 			}
+
+			/*
+			5. List the students working on each exercise, include the student's cohort and the instructor who assigned the exercise  */
+
+			Dictionary<int, Student> activeStudents = new Dictionary<int, Student>();
+			db.Query<Student, Cohort, Exercise, Instructor, Student>(@"
+			SELECT
+				s.Id, s.FirstName, s.LastName,
+				c.Id, c.Name,
+				e.Id, e.Name,
+				i.Id, i.FirstName, i.LastName
+			FROM Student s
+			JOIN Cohort c ON s.CohortId = c.Id
+			JOIN StudentExercise se ON s.Id = se.StudentId
+			JOIN Exercise e ON e.Id = se.ExerciseId
+			JOIN Instructor i ON i.Id = se.InstructorId;
+			", (student, cohort, exercise, instructor) =>
+			{
+				if (!activeStudents.ContainsKey(student.Id))
+				{
+					activeStudents[student.Id] = student;
+				}
+				activeStudents[student.Id].Cohort = cohort;
+				activeStudents[student.Id].AssignedExercises.Add(exercise);
+				return student;
+			});
+
+			foreach (KeyValuePair<int, Student> activeStudent in activeStudents)
+			{
+					StringBuilder studentOutput = new StringBuilder();
+					string studentFullName = $"{activeStudent.Value.FirstName} {activeStudent.Value.LastName}";
+					string studentCohort = activeStudent.Value.Cohort.Name;
+					studentOutput.AppendLine($"{studentFullName} from {studentCohort} is working on:");
+					foreach (Exercise assignment in activeStudent.Value.AssignedExercises)
+					{
+							string exerciseName = assignment.Name;
+
+							
+					}
+			}
+
+
 
 
 
