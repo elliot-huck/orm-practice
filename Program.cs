@@ -306,16 +306,31 @@ namespace nss
 
 			foreach (KeyValuePair<int, Student> activeStudent in activeStudents)
 			{
-					StringBuilder studentOutput = new StringBuilder();
-					string studentFullName = $"{activeStudent.Value.FirstName} {activeStudent.Value.LastName}";
-					string studentCohort = activeStudent.Value.Cohort.Name;
-					studentOutput.AppendLine($"{studentFullName} from {studentCohort} is working on:");
-					foreach (Exercise assignment in activeStudent.Value.AssignedExercises)
-					{
-							string exerciseName = assignment.Name;
+				StringBuilder studentOutput = new StringBuilder();
+				string studentFullName = $"{activeStudent.Value.FirstName} {activeStudent.Value.LastName}";
+				string studentCohort = activeStudent.Value.Cohort.Name;
+				studentOutput.AppendLine($"{studentFullName} from {studentCohort} is working on:");
+				foreach (Exercise assignment in activeStudent.Value.AssignedExercises)
+				{
+					string exerciseName = assignment.Name;
 
-							
-					}
+					Instructor assigningTeacher =
+					db.Query<StudentExercise, Instructor, Instructor>($@"
+							SELECT
+								i.Id, i.FirstName, i.LastName
+							FROM StudentExercise se
+							JOIN Instructor i ON se.InstructorId = i.Id
+							WHERE StudentId = {activeStudent.Value.Id} AND ExerciseId = {assignment.Id};
+							", (studentExercise, instructor) =>
+					{
+						return instructor;
+					}).ToList()[0];
+
+					string instructorName = $"{assigningTeacher.FirstName} {assigningTeacher.LastName}";
+
+					studentOutput.AppendLine($"{exerciseName} (assigned by {instructorName})");
+				}
+				Console.WriteLine(studentOutput);
 			}
 
 
