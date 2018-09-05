@@ -226,8 +226,8 @@ namespace nss
 				i.Id, i.FirstName, i.LastName,
 				s.Id, s.FirstName, s.LastName
 			FROM Cohort c
-			LEFT JOIN Instructor i ON c.Id = i.CohortId
-			LEFT JOIN Student s ON c.Id = s.CohortId;
+			JOIN Instructor i ON c.Id = i.CohortId
+			JOIN Student s ON c.Id = s.CohortId;
 			", (cohort, instructor, student) =>
 			{
 				if (!allCohorts.ContainsKey(cohort.Id))
@@ -248,6 +248,8 @@ namespace nss
 			foreach (KeyValuePair<int, Cohort> group in allCohorts)
 			{
 				StringBuilder classOutput = new StringBuilder();
+				classOutput.AppendLine();
+				classOutput.AppendLine($"{group.Value.Name}");
 
 				classOutput.Append("Teachers: ");
 				List<string> teacherNames = new List<string>();
@@ -265,8 +267,7 @@ namespace nss
 				});
 				classOutput.AppendLine(String.Join(", ", studentNames));
 				Console.WriteLine(classOutput);
-				Console.WriteLine();
-				
+
 			}
 
 
