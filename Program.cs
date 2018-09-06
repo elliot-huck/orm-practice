@@ -28,16 +28,16 @@ namespace nss
 
 
 			List<Instructor> instructors = db.Query<Instructor>(@"SELECT * FROM Instructor").ToList();
-			instructors.ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
+			// instructors.ForEach(i => Console.WriteLine($"{i.FirstName} {i.LastName}"));
 
 			List<Exercise> exercises = db.Query<Exercise>(@"SELECT * FROM Exercise").ToList();
-			exercises.ForEach(e => Console.WriteLine($"{e.Name}"));
+			// exercises.ForEach(e => Console.WriteLine($"{e.Name}"));
 
 			List<Student> students = db.Query<Student>(@"SELECT * FROM Student").ToList();
-			students.ForEach(s => Console.WriteLine($"{s.FirstName} {s.LastName}"));
+			// students.ForEach(s => Console.WriteLine($"{s.FirstName} {s.LastName}"));
 
 			List<Cohort> cohorts = db.Query<Cohort>(@"SELECT * FROM Cohort").ToList();
-			cohorts.ForEach(i => Console.WriteLine($"{i.Name}"));
+			// cohorts.ForEach(i => Console.WriteLine($"{i.Name}"));
 
 			/*
 					Query the database for each instructor, and join in the instructor's cohort.
@@ -116,7 +116,7 @@ namespace nss
 			 */
 			foreach (KeyValuePair<int, Cohort> cohort in report)
 			{
-				Console.WriteLine($"{cohort.Value.Name} has {cohort.Value.Instructors.Count} instructors.");
+				// Console.WriteLine($"{cohort.Value.Name} has {cohort.Value.Instructors.Count} instructors.");
 			}
 
 			/*
@@ -153,7 +153,7 @@ namespace nss
 				List<string> assignedExercises = new List<string>();
 				student.Value.AssignedExercises.ForEach(e => assignedExercises.Add(e.Name));
 
-				Console.WriteLine($@"{student.Value.FirstName} {student.Value.LastName} is working on {String.Join(',', assignedExercises)}.");
+				// Console.WriteLine($@"{student.Value.FirstName} {student.Value.LastName} is working on {String.Join(',', assignedExercises)}.");
 			}
 
 
@@ -205,7 +205,7 @@ namespace nss
 				output.Append($"{student.Value.FirstName} {student.Value.LastName} ");
 				output.Append($"in {student.Value.Cohort.Name} ");
 				output.Append($"is working on {String.Join(',', assignedExercises)}.");
-				Console.WriteLine(output);
+				// Console.WriteLine(output);
 			}
 
 			/*
@@ -313,7 +313,7 @@ namespace nss
 				foreach (Exercise assignment in activeStudent.Value.AssignedExercises)
 				{
 					string exerciseName = assignment.Name;
-					string instructorName;
+					string instructorName = "";
 
 					Instructor assigningTeacher =
 					db.Query<StudentExercise, Instructor, Instructor>($@"
@@ -325,11 +325,9 @@ namespace nss
 							WHERE StudentId = {activeStudent.Value.Id} AND ExerciseId = {assignment.Id};
 							", (studentExercise, instructor) =>
 					{
-						instructorName = (instructor.FirstName);
+						instructorName = ($"{instructor.FirstName} {instructor.LastName}");
 						return instructor;
 					}).ToList()[0];
-
-					Console.WriteLine(assigningTeacher);
 
 					// string instructorName = $"{assigningTeacher.FirstName} {assigningTeacher.LastName}";
 
